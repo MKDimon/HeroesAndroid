@@ -6,6 +6,7 @@ import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import com.example.heroesandroid.client.commands.CommandFactory
@@ -26,8 +27,8 @@ import com.example.heroesandroid.heroes.player.BaseBot
 import com.example.heroesandroid.heroes.player.botdimon.Dimon
 import com.example.heroesandroid.heroes.player.botgleb.ExpectiMaxBot
 import com.example.heroesandroid.heroes.player.botnikita.NikitaBot
-import com.example.heroesandroid.heroes.units.Unit
 import com.example.heroesandroid.heroes.player.controlsystem.Selector
+import com.example.heroesandroid.heroes.units.Unit
 import org.slf4j.LoggerFactory
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Semaphore
@@ -49,6 +50,7 @@ class WarActivity: Activity() {
     lateinit var mSyncCommand: CountDownLatch
     lateinit var mSyncThread: Semaphore
     lateinit var mThread: Thread
+    lateinit var mDecorView: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -104,6 +106,8 @@ class WarActivity: Activity() {
             findViewById(R.id.unit_r_10),
             findViewById(R.id.unit_r_20),
         )
+
+        mDecorView = window.decorView
 
         mThread = Thread {
             while (!Connection.isClosed()) {
@@ -165,6 +169,22 @@ class WarActivity: Activity() {
         Connection.closeConnection()
         finish()
         mSyncCommand.countDown()
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+    }
+
+    private fun showSystemUI() {
+        mDecorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
     }
 
     inner class GUI: IGUI {
