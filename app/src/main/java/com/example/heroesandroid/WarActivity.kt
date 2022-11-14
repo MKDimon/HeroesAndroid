@@ -181,12 +181,6 @@ class WarActivity: Activity() {
                 or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
     }
 
-    private fun showSystemUI() {
-        mDecorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
-    }
-
     inner class GUI: IGUI {
         override fun refresh() {
             TODO("Not yet implemented")
@@ -223,17 +217,35 @@ class WarActivity: Activity() {
         @SuppressLint("UseCompatLoadingForDrawables")
         private fun drawAction(action: ActionTypes, attacker: TextView, defender: TextView,
                                activeDef: Boolean, defenderAlive: Boolean,
-                               activeAttacker: Boolean) {
+                               activeAttacker: Boolean, field: Boolean,
+                               armyOne: Array<Array<Unit>>?, armyTwo: Array<Array<Unit>>?) {
             when (action) {
                 ActionTypes.AREA_DAMAGE -> {
                     attacker.background = when (activeAttacker) {
                         true -> getDrawable(R.drawable.attacker_active)
                         false -> getDrawable(R.drawable.attacker)
                     }
-                    for (i in rightPlayerArmy) {
-                        i.background = when(activeDef) {
-                            true -> getDrawable(R.drawable.attacking_unit_active)
-                            false -> getDrawable(R.drawable.attacking_unit)
+                    val armyTextView: Array<TextView>
+                    val armyUnits: Array<Array<Unit>>
+
+                    when (field) {
+                        true -> {
+                            armyUnits = armyOne!!
+                            armyTextView = leftPlayerArmy
+                        }
+                        false -> {
+                            armyUnits = armyTwo!!
+                            armyTextView = rightPlayerArmy
+                        }
+                    }
+
+                    for (i in 0..1) {
+                        for (j in 0..2) {
+                            if (!armyUnits[i][j].isAlive) continue
+                            armyTextView[i * 3 + j].background = when(armyUnits[i][j].isActive) {
+                                true -> getDrawable(R.drawable.attacking_unit_active)
+                                false -> getDrawable(R.drawable.attacking_unit)
+                            }
                         }
                     }
                 }
@@ -308,7 +320,8 @@ class WarActivity: Activity() {
                     ActionTypes.AREA_DAMAGE -> arr[0]
                     else -> arr2[answer.defender.X() * 3 + answer.defender.Y()]
                 }
-                drawAction(answer.actionType, attacker, defender, isActiveDef, isAlive, isActiveAtc)
+                drawAction(answer.actionType, attacker, defender, isActiveDef, isAlive, isActiveAtc,
+                    answer.defender.F() == Fields.PLAYER_ONE ,armyOne, armyTwo)
             }
         }
 

@@ -2,6 +2,7 @@ package com.example.heroesandroid
 
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.widget.Button
 import android.widget.RadioGroup
@@ -10,6 +11,7 @@ class RoomSelectActivity: Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_room_change)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         val radioGroup: RadioGroup = findViewById(R.id.room_selector)
 
@@ -26,5 +28,8 @@ class RoomSelectActivity: Activity() {
         }
     }
 
-
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+    }
 }

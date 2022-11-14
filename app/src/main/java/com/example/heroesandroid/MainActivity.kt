@@ -2,6 +2,7 @@ package com.example.heroesandroid
 
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -19,6 +20,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         var mBtnConnect: Button = findViewById(R.id.button)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         mBtnConnect.setOnClickListener {
             // For emulator 127.0.0.1 = 10.0.2.2
@@ -77,5 +79,10 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra("room", room)
         intent.putExtra("field", field)
         startActivity(intent)
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
 }

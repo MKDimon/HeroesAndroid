@@ -22,8 +22,8 @@ object GetASCIIUnit {
                                "        |+|\n" +
                                "        |+|",
         ActionTypes.AREA_DAMAGE to "         ||\n" +
-                                   "      _\\  /_\n" +
-                                   "        /  \\\n" +
+                                   "     _\\   /_\n" +
+                                   "       /   \\\n" +
                                    "         ||\n" +
                                    "         ||\n" +
                                    "         ||\n" +
